@@ -33,7 +33,7 @@ module.exports = {
     root: true, // For configuration cascading.
     rules: {
         "no-unused-vars": ["warn", { vars: "all", args: "after-used", ignoreRestSiblings: false }],
-        indent: ["error", 4],
+        indent: ["error", 4, { SwitchCase: 1 }],
         quotes: ["warn", "double"],
         "max-len": [
             "warn",
@@ -48,4 +48,4 @@ module.exports = {
             version: "detect", // Detect react version
         },
     },
-}
+};
