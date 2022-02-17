@@ -1,23 +1,40 @@
 import React, { useState, useEffect, useRef, createContext } from "react"
 import PropTypes from "prop-types"
-import MoistureGraph from "../components/moistureGraph"
 
-const { Provider, Consumer } = createContext()
+const IrrigationContext = createContext()
 
 function IrrigationWebSocket(props) {
-    const initalState = []
-
-    const [irrigtaionData, setIrrigtaionData] = useState(initalState)
+    const [irrigationData, setIrrigationData] = useState([])
     const ws = useRef(null)
 
     const updateData = (data) => {
         switch (data.messageType) {
             case "ARRAY_DATA":
-                setIrrigtaionData((prevState) => [...prevState, { nodeName: data.nodeName, data: data.payload }])
+                setIrrigationData((prevState) => [
+                    ...prevState,
+                    { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
+                ])
                 break
             default:
                 throw { name: "NotImplementedError", message: "too lazy to implement" }
         }
+    }
+
+    const formateDate = (date) => {
+        return new Date(
+            date.year,
+            date.monthValue,
+            date.dayOfMonth,
+            date.hour,
+            date.minute,
+            date.second
+        ).toLocaleDateString("en", { day: "numeric", month: "short" })
+    }
+
+    const formateDateInArray = (payload) => {
+        return payload.map((data) => {
+            return { moisturePercentage: data.moisturePercentage, dateReceived: formateDate(data.dateReceived) }
+        })
     }
 
     useEffect(() => {
@@ -30,7 +47,6 @@ function IrrigationWebSocket(props) {
         ws.current.onmessage = (e) => {
             const message = JSON.parse(e.data)
             updateData(message)
-            console.log("e", message)
         }
 
         return () => {
@@ -38,14 +54,14 @@ function IrrigationWebSocket(props) {
         }
     }, [])
 
-    useEffect(() => {}, [irrigtaionData])
-    return <Provider value={irrigtaionData}>{props.children}</Provider>
+    // useEffect(() => {}, [irrigationData])
+    return <IrrigationContext.Provider value={irrigationData}>{props.children}</IrrigationContext.Provider>
 }
 
 IrrigationWebSocket.propTypes = {
-    children: PropTypes.array,
+    children: PropTypes.object,
 }
 
 export { IrrigationWebSocket }
 
-export default Consumer
+export default IrrigationContext

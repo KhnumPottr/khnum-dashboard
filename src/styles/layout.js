@@ -6,11 +6,12 @@ export const Page = styled.div({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    padding: "2rem",
 })
 
 export const Container = styled.div({
-    minHeight: "25rem",
-    minWidth: "25rem",
-    padding: "2rem",
+    minHeight: "10rem",
+    minWidth: "10rem",
+    maxHeight: "40rem",
+    maxWidth: "40rem",
+    margin: "5rem",
 })

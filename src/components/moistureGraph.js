@@ -1,27 +1,80 @@
-import React from "react"
+import React, { createRef } from "react"
 import PropTypes from "prop-types"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { Line } from "react-chartjs-2"
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js"
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
 function MoistureGraph({ data }) {
-    console.log("I am rendering")
+    const chartRef = createRef()
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+            duration: 300,
+            easing: "linear",
+        },
+        plugins: {
+            filler: {
+                propagate: true,
+            },
+        },
+        scales: {
+            y: {
+                min: 0,
+                max: 100,
+                grid: {
+                    display: false,
+                },
+            },
+            x: {
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    fontColor: "rgba(4, 214, 144, 0.1)",
+                    maxTicksLimit: 7,
+                    maxRotation: 0,
+                    minRotation: 0,
+                },
+            },
+        },
+        elements: {
+            point: {
+                radius: 0,
+            },
+        },
+    }
+
+    const chartData = {
+        labels: data.map((set) => {
+            return set.dateReceived
+        }),
+        datasets: [
+            {
+                label: "Irrigation",
+                data: data.map((set) => {
+                    return set.moisturePercentage
+                }),
+                borderWidth: 2,
+                backgroundColor: "#4F9D69",
+                borderColor: "#4F9D69",
+            },
+        ],
+    }
     return (
-        <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-                width={200}
-                height={400}
-                data={data}
-                margin={{
-                    top: 5,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                }}
-            >
-                <XAxis dataKey="dateReceived" />
-                <Tooltip />
-                <Area type="monotone" dataKey="moisturePercentage" stroke="#8884d8" fill="#8884d8" />
-            </AreaChart>
-        </ResponsiveContainer>
+        <div>
+            <Line ref={chartRef} data={chartData} options={options} />
+        </div>
     )
 }
 

@@ -7,12 +7,11 @@ function Dashboard() {
     // const [levels, setLevels] = useState(false)
 
     return (
-        <IrrigationWebSocket>
-            <h1>Hello World</h1>
-            <Page>
+        <Page>
+            <IrrigationWebSocket>
                 <PlanterDisplay />
-            </Page>
-        </IrrigationWebSocket>
+            </IrrigationWebSocket>
+        </Page>
     )
 }
 
