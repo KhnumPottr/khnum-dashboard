@@ -1,10 +1,10 @@
-import { Card } from "evergreen-ui"
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, createContext } from "react"
+import PropTypes from "prop-types"
 import MoistureGraph from "../components/moistureGraph"
 
-//{ nodeName: String, data: [{ percentage: Number, dateRecived: Date }] }
+const { Provider, Consumer } = createContext()
 
-function IrrigationWebSocket() {
+function IrrigationWebSocket(props) {
     const initalState = []
 
     const [irrigtaionData, setIrrigtaionData] = useState(initalState)
@@ -21,7 +21,7 @@ function IrrigationWebSocket() {
     }
 
     useEffect(() => {
-        ws.current = new WebSocket("ws://127.0.0.1:8080/moistureLevels")
+        ws.current = new WebSocket("ws://192.168.1.16:8080/moistureLevels")
         ws.current.onopen = () => console.log("ws opened")
         ws.current.onclose = () => console.log("ws closed")
 
@@ -39,18 +39,13 @@ function IrrigationWebSocket() {
     }, [])
 
     useEffect(() => {}, [irrigtaionData])
-    return (
-        <div>
-            {irrigtaionData.map((node, index) => {
-                return (
-                    <div key={index}>
-                        <h4>Node: {node.nodeName}</h4>
-                        <MoistureGraph data={node.data} />
-                    </div>
-                )
-            })}
-        </div>
-    )
+    return <Provider value={irrigtaionData}>{props.children}</Provider>
 }
 
-export default IrrigationWebSocket
+IrrigationWebSocket.propTypes = {
+    children: PropTypes.array,
+}
+
+export { IrrigationWebSocket }
+
+export default Consumer
