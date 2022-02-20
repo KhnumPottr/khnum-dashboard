@@ -1,46 +1,37 @@
-import React, { useContext } from "react"
-import IrrigationContext from "../connections/irrigationWebSocket"
-import MoistureGraph from "./moistureGraph"
-import { Container } from "../styles/layout"
+import React, { useState, useEffect } from "react"
+import { useIrrigation } from "../connections/irrigationWebSocket"
+import IrrigationGraph from "./irrigationGraph"
+import DoughnutMoistureGraph from "./doughnutMoistureGraph"
+import { Container, Card } from "../styles/layout"
+import { DoughnutContainer, Percentage, Doughnut } from "../styles/graphDisplays"
 import { Title, SubTitle } from "../styles/text"
+import { RiSeedlingFill } from "react-icons/ri"
 
-function PlanterDisplay() {
-    const [irrigationData, setIrrigationData] = useContext(IrrigationContext)
-
-    // if (irrigationData != undefined) {
-    //     console.log(irrigationData)
-    // irrigationData.map((element, key) => {
-    //     return (
-    //         <Container key={key}>
-    //             <Title>{element.nodeName}</Title>
-    //             <SubTitle>Moisture Level: {element.data[element.data.length - 1].moisturePercentage}%</SubTitle>
-    //             <MoistureGraph data={element.data} />
-    //         </Container>
-    //     )
-    // })
-    // } else {
-    //     return <div />
-    // }
-
+function PlanterSummaryDisplay() {
+    const planterData = useIrrigation()
+    if (planterData.length === 0) return <Container />
     return (
-        <IrrigationContext.Consumer>
-            {(cxt) => {
-                console.log(cxt)
-                cxt.map((element, key) => {
-                    console.log(key)
-                    return (
-                        <Container key={key}>
-                            <Title>{element.nodeName}</Title>
-                            <SubTitle>
-                                Moisture Level: {element.data[element.data.length - 1].moisturePercentage}%
-                            </SubTitle>
-                            <MoistureGraph data={element.data} />
-                        </Container>
-                    )
-                })
-            }}
-        </IrrigationContext.Consumer>
+        <Container>
+            {Object.keys(planterData).map((key) => {
+                return (
+                    <Card key={key}>
+                        <Title>
+                            {key}
+                            <RiSeedlingFill />
+                        </Title>
+                        <DoughnutContainer>
+                            <Percentage>
+                                {planterData[key].data[planterData[key].data.length - 1].moisturePercentage}
+                            </Percentage>
+                            <Doughnut>
+                                <DoughnutMoistureGraph planter={key} />
+                            </Doughnut>
+                        </DoughnutContainer>
+                    </Card>
+                )
+            })}
+        </Container>
     )
 }
 
-export default PlanterDisplay
+export default PlanterSummaryDisplay

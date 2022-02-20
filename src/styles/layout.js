@@ -9,9 +9,22 @@ export const Page = styled.div({
 })
 
 export const Container = styled.div({
-    minHeight: "10rem",
-    minWidth: "10rem",
-    maxHeight: "40rem",
-    maxWidth: "40rem",
-    margin: "5rem",
+    minHeight: "20rem",
+    margin: "2rem",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+})
+
+export const Card = styled.div({
+    minHeight: "20rem",
+    minWidth: "20rem",
+    margin: "2rem",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    // borderColor: "red",
+    // borderStyle: "solid",
 })

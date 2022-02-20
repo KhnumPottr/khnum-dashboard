@@ -1,6 +1,6 @@
 import React from "react"
-import PlanterDisplay from "../components/planterDisplay"
-import { IrrigationWebSocket } from "../connections/irrigationWebSocket"
+import PlanterSummaryDisplay from "../components/planterDisplay"
+import IrrigationWebSocket from "../connections/irrigationWebSocket"
 import { Page } from "../styles/layout"
 
 function Dashboard() {
@@ -9,7 +9,7 @@ function Dashboard() {
     return (
         <Page>
             <IrrigationWebSocket>
-                <PlanterDisplay />
+                <PlanterSummaryDisplay />
             </IrrigationWebSocket>
         </Page>
     )

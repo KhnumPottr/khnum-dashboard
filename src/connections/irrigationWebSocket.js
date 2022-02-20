@@ -1,20 +1,41 @@
-import React, { useState, useEffect, useRef, createContext } from "react"
+import React, { useState, useEffect, useRef, createContext, useContext } from "react"
 import PropTypes from "prop-types"
 
 const IrrigationContext = createContext()
 
-function IrrigationWebSocket(props) {
-    const [irrigationData, setIrrigationData] = useState([])
+function IrrigationWebSocket({ children }) {
+    const [irrigationData, setIrrigationData] = useState({})
     const ws = useRef(null)
 
-    const updateData = (data) => {
+    const dataReducer = (data) => {
         switch (data.messageType) {
             case "ARRAY_DATA":
-                setIrrigationData((prevState) => [
-                    ...prevState,
-                    { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
-                ])
+                if (!Object.prototype.hasOwnProperty.call(irrigationData, `${data.nodeName}`)) {
+                    setIrrigationData((prevState) => {
+                        return {
+                            ...prevState,
+                            [data.nodeName]: { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
+                        }
+                    })
+                }
                 break
+            case "DATA": {
+                setIrrigationData((prevState) => {
+                    return {
+                        ...prevState,
+                        [data.nodeName]: {
+                            ...prevState[data.nodeName],
+                            data: [
+                                {
+                                    moisturePercentage: data.payload,
+                                    dateReceived: formateDate(data.dateReceived),
+                                },
+                            ],
+                        },
+                    }
+                })
+                break
+            }
             default:
                 throw { name: "NotImplementedError", message: "too lazy to implement" }
         }
@@ -23,7 +44,7 @@ function IrrigationWebSocket(props) {
     const formateDate = (date) => {
         return new Date(
             date.year,
-            date.monthValue,
+            date.monthValue - 1,
             date.dayOfMonth,
             date.hour,
             date.minute,
@@ -38,7 +59,7 @@ function IrrigationWebSocket(props) {
     }
 
     useEffect(() => {
-        ws.current = new WebSocket("ws://192.168.1.16:8080/moistureLevels")
+        ws.current = new WebSocket("ws://127.0.0.1:8080/moistureLevels")
         ws.current.onopen = () => console.log("ws opened")
         ws.current.onclose = () => console.log("ws closed")
 
@@ -46,22 +67,31 @@ function IrrigationWebSocket(props) {
 
         ws.current.onmessage = (e) => {
             const message = JSON.parse(e.data)
-            updateData(message)
+            dataReducer(message)
         }
+
+        ws.current.send
 
         return () => {
             wsCurrent.close()
         }
     }, [])
 
-    // useEffect(() => {}, [irrigationData])
-    return <IrrigationContext.Provider value={irrigationData}>{props.children}</IrrigationContext.Provider>
+    return <IrrigationContext.Provider value={irrigationData}>{children}</IrrigationContext.Provider>
+}
+
+function useIrrigation() {
+    const context = useContext(IrrigationContext)
+    if (context === undefined) {
+        throw new Error("useIrrigation must be used within a IrrigationWebSocket Provider")
+    }
+    return context
 }
 
 IrrigationWebSocket.propTypes = {
-    children: PropTypes.object,
+    children: PropTypes.array,
 }
 
-export { IrrigationWebSocket }
+export { useIrrigation }
 
-export default IrrigationContext
+export default IrrigationWebSocket
