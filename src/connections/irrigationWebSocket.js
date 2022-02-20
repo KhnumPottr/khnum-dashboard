@@ -59,10 +59,7 @@ function IrrigationWebSocket({ children }) {
     }
 
     useEffect(() => {
-        ws.current = new WebSocket("ws://127.0.0.1:8080/moistureLevels")
-        ws.current.onopen = () => console.log("ws opened")
-        ws.current.onclose = () => console.log("ws closed")
-
+        ws.current = new WebSocket("ws://192.168.1.16:8080/moistureLevels")
         const wsCurrent = ws.current
 
         ws.current.onmessage = (e) => {
