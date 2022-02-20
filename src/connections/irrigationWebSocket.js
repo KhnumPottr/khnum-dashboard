@@ -75,6 +75,7 @@ function IrrigationWebSocket({ children }) {
         return () => {
             wsCurrent.close()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return <IrrigationContext.Provider value={irrigationData}>{children}</IrrigationContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useState, createRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Chart as ChartJS, registerables, Filler } from "chart.js"
 import { Line } from "react-chartjs-2"
@@ -35,7 +35,6 @@ function IrrigationGraph({ planter }) {
     }
 
     useEffect(() => {
-        console.log("Updating")
         if (irrigationData[planter] != undefined) {
             const plottingData = irrigationData[planter].data
             setData((prevData) => {

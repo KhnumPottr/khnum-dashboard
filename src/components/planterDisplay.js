@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { useIrrigation } from "../connections/irrigationWebSocket"
-import IrrigationGraph from "./irrigationGraph"
 import DoughnutMoistureGraph from "./doughnutMoistureGraph"
 import { Container, Card } from "../styles/layout"
 import { DoughnutContainer, Percentage, Doughnut } from "../styles/graphDisplays"
-import { Title, SubTitle } from "../styles/text"
+import { Title } from "../styles/text"
 import { RiSeedlingFill } from "react-icons/ri"
 
 function PlanterSummaryDisplay() {
