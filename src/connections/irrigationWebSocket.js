@@ -10,7 +10,7 @@ function IrrigationWebSocket({ children }) {
     const dataReducer = (data) => {
         switch (data.messageType) {
             case "ARRAY_DATA":
-                if (!Object.prototype.hasOwnProperty.call(irrigationData, `${data.nodeName}`)) {
+                if (irrigationData[data.nodeName] == undefined || irrigationData[data.nodeName].data.length == 1) {
                     setIrrigationData((prevState) => {
                         return {
                             ...prevState,
@@ -20,17 +20,29 @@ function IrrigationWebSocket({ children }) {
                 }
                 break
             case "DATA": {
+                let updateData
+                if (irrigationData[data.nodeName] == undefined) {
+                    updateData = [
+                        {
+                            moisturePercentage: data.payload,
+                            dateReceived: formateDate(data.dateReceived),
+                        },
+                    ]
+                } else {
+                    updateData = [
+                        ...irrigationData[data.nodeName].data,
+                        {
+                            moisturePercentage: data.payload,
+                            dateReceived: formateDate(data.dateReceived),
+                        },
+                    ]
+                }
                 setIrrigationData((prevState) => {
                     return {
                         ...prevState,
                         [data.nodeName]: {
                             ...prevState[data.nodeName],
-                            data: [
-                                {
-                                    moisturePercentage: data.payload,
-                                    dateReceived: formateDate(data.dateReceived),
-                                },
-                            ],
+                            data: updateData,
                         },
                     }
                 })
@@ -58,16 +70,26 @@ function IrrigationWebSocket({ children }) {
         })
     }
 
+    const sendMessage = (message) => {
+        if (ws.current) {
+            ws.current.send(message)
+        }
+    }
+
     useEffect(() => {
-        ws.current = new WebSocket("ws://192.168.1.16:8080/moistureLevels")
+        ws.current = new WebSocket(`ws://${process.env.REACT_APP_WEBSOCKET_ADDRESS}/clientData`)
         const wsCurrent = ws.current
 
-        ws.current.onmessage = (e) => {
+        wsCurrent.onmessage = (e) => {
             const message = JSON.parse(e.data)
             dataReducer(message)
         }
 
-        ws.current.send
+        setIrrigationData((prevState) => {
+            return { ...prevState, send: sendMessage }
+        })
+
+        // wsCurrent.send
 
         return () => {
             wsCurrent.close()
@@ -87,7 +109,7 @@ function useIrrigation() {
 }
 
 IrrigationWebSocket.propTypes = {
-    children: PropTypes.array,
+    children: PropTypes.object,
 }
 
 export { useIrrigation }

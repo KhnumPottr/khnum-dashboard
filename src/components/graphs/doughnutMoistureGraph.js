@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Chart as ChartJS, registerables, Filler } from "chart.js"
 import { Doughnut } from "react-chartjs-2"
-import { useIrrigation } from "../connections/irrigationWebSocket"
+import { useIrrigation } from "../../connections/irrigationWebSocket"
 
 ChartJS.register(...registerables, Filler)
 
@@ -16,9 +16,9 @@ function DoughnutMoistureGraph({ planter }) {
                 label: "Irrigation",
                 data: [],
                 fill: true,
-                backgroundColor: ["#4F9D69", "rgba(220,220,220,0)"],
-                borderColor: ["#4F9D69", "rgba(220,220,220,0)"],
-                fillColor: "#4F9D69",
+                backgroundColor: ["rgba(46, 94, 170, 1)", "rgba(220,220,220,0)"],
+                borderColor: ["rgba(46, 94, 170, 1)", "rgba(220,220,220,0)"],
+                fillColor: "rgba(46, 94, 170, 1)",
             },
         ],
     })

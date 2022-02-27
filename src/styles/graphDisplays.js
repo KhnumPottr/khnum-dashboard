@@ -6,6 +6,17 @@ export const DoughnutContainer = styled.div({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    height: "100%",
+    width: "100%",
+})
+
+export const LineContainer = styled.div({
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "40rem",
+    width: "100%",
 })
 
 export const Percentage = styled.p({
@@ -14,12 +25,14 @@ export const Percentage = styled.p({
     left: "50%",
     top: "50%",
     transform: "translate(-50%, -50%)",
-    fontSize: "4rem",
+    fontSize: "3rem",
     margin: "0",
-    color: "#4F9D69",
+    color: "rgba(46, 94, 170, 1)",
 })
 
 export const Doughnut = styled.div({
     top: 0,
     left: 0,
+    height: "5rem",
+    width: "5rem",
 })

@@ -1,17 +1,14 @@
 import React from "react"
-import PlanterSummaryDisplay from "../components/planterDisplay"
-import IrrigationWebSocket from "../connections/irrigationWebSocket"
-import { Page } from "../styles/layout"
+import PlanterSummaryDisplay from "../components/planterSummaryDisplay"
+import { Container } from "../styles/layout"
+import { Title } from "../styles/text"
 
 function Dashboard() {
-    // const [levels, setLevels] = useState(false)
-
     return (
-        <Page>
-            <IrrigationWebSocket>
-                <PlanterSummaryDisplay />
-            </IrrigationWebSocket>
-        </Page>
+        <Container>
+            <Title>Eden Report</Title>
+            <PlanterSummaryDisplay />
+        </Container>
     )
 }
 
