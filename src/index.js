@@ -2,11 +2,14 @@ import React from "react"
 import ReactDOM from "react-dom"
 import "./styles/index.css"
 import reportWebVitals from "./reportWebVitals"
-import Dashboard from "./pages/dashboard"
+import Main from "./pages/main"
+import { BrowserRouter } from "react-router-dom"
 
 ReactDOM.render(
     <React.StrictMode>
-        <Dashboard />
+        <BrowserRouter>
+            <Main />
+        </BrowserRouter>
     </React.StrictMode>,
     document.getElementById("root")
 )
