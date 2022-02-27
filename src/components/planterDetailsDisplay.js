@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useParams } from "react-router-dom"
 import IrrigationGraph from "./graphs/irrigationGraph"
-import { Section, Card, SectionWidthHalf, CardButtons } from "../styles/layout"
+import { Card } from "../styles/layout"
 import { LineContainer } from "../styles/graphDisplays"
 import { useIrrigation } from "../connections/irrigationWebSocket"
 
