@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+    khnumDashboard:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: khnum-dashboard
+        container_name: KhnumDashboard
+        restart: on-failure
+        ports:
+            - "3000:3000"
+        networks:
+            - main-network
+        extra_hosts:
+            - "websocket.dev.plant-irrigation-service:172.25.0.101"
+networks:
+    main-network:
+        external:
+            name: "PlantNetwork"
