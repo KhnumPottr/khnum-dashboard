@@ -4,24 +4,30 @@ import PropTypes from "prop-types"
 const IrrigationContext = createContext()
 
 function IrrigationWebSocket({ children }) {
-    const [irrigationData, setIrrigationData] = useState({})
+    const [irrigationData, setIrrigationData] = useState({ nodes: {} })
     const ws = useRef(null)
 
     const dataReducer = (data) => {
         switch (data.messageType) {
             case "ARRAY_DATA":
-                if (irrigationData[data.nodeName] == undefined || irrigationData[data.nodeName].data.length == 1) {
+                if (
+                    irrigationData.nodes[data.nodeName] == undefined ||
+                    irrigationData.nodes[data.nodeName].data.length == 1
+                ) {
                     setIrrigationData((prevState) => {
                         return {
                             ...prevState,
-                            [data.nodeName]: { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
+                            nodes: {
+                                ...prevState.nodes,
+                                [data.nodeName]: { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
+                            },
                         }
                     })
                 }
                 break
             case "DATA": {
                 let updateData
-                if (irrigationData[data.nodeName] == undefined) {
+                if (irrigationData.nodes[data.nodeName] == undefined) {
                     updateData = [
                         {
                             moisturePercentage: data.payload,
@@ -30,7 +36,7 @@ function IrrigationWebSocket({ children }) {
                     ]
                 } else {
                     updateData = [
-                        ...irrigationData[data.nodeName].data,
+                        ...irrigationData.nodes[data.nodeName].data,
                         {
                             moisturePercentage: data.payload,
                             dateReceived: formateDate(data.dateReceived),
@@ -40,14 +46,25 @@ function IrrigationWebSocket({ children }) {
                 setIrrigationData((prevState) => {
                     return {
                         ...prevState,
-                        [data.nodeName]: {
-                            ...prevState[data.nodeName],
-                            data: updateData,
+                        nodes: {
+                            ...prevState.nodes,
+                            [data.nodeName]: {
+                                ...prevState[data.nodeName],
+                                data: updateData,
+                            },
                         },
                     }
                 })
                 break
             }
+            case "SWITCH":
+                setIrrigationData((prevState) => {
+                    return {
+                        ...prevState,
+                        irrigationState: data.payload,
+                    }
+                })
+                break
             default:
                 throw { name: "NotImplementedError", message: "too lazy to implement" }
         }

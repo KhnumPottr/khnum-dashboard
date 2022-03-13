@@ -7,7 +7,7 @@ import { useIrrigation } from "../../connections/irrigationWebSocket"
 ChartJS.register(...registerables, Filler)
 
 function IrrigationGraph({ planter }) {
-    const irrigationData = useIrrigation()
+    const irrigationData = useIrrigation().nodes
 
     const [data, setData] = useState({
         labels: [],

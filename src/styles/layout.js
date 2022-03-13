@@ -18,6 +18,7 @@ export const Container = styled.div({
 })
 
 export const Section = styled.div({
+    width: "100vw",
     minHeight: "20rem",
     marginTop: "2rem",
     marginBottom: "2rem",

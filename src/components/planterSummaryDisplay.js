@@ -9,48 +9,47 @@ import { RiSeedlingFill } from "react-icons/ri"
 import { Link } from "react-router-dom"
 
 function PlanterSummaryDisplay() {
-    const planterData = useIrrigation()
-    if (planterData.length === 0) return <Section />
+    const planterNodes = useIrrigation().nodes
+    console.log(planterNodes)
+    if (planterNodes.length === 1) return <Section />
     return (
         <Section>
-            {Object.keys(planterData).map((key) => {
-                if (key !== "send") {
-                    return (
-                        <Card small key={key}>
-                            <SectionWidthHalf>
-                                <SubTitle>
-                                    {key}
-                                    <RiSeedlingFill />
-                                </SubTitle>
-                                <Paragraph>
-                                    <Label>Age:</Label>
-                                    <Value>76 Days</Value>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Label>Days till next watering:</Label>
-                                    <Value>14 days</Value>
-                                </Paragraph>
-                                <Paragraph>
-                                    <Label>Plants:</Label>
-                                    <Value>Flowers, Tomatoes, Beans, Roses, Basil</Value>
-                                </Paragraph>
-                                <CardButtons>
-                                    <Link to={`/planter/${key}`} key={key}>
-                                        <SuccessButton>Details</SuccessButton>
-                                    </Link>
-                                </CardButtons>
-                            </SectionWidthHalf>
-                            <SectionWidthHalf>
-                                <DoughnutContainer>
-                                    <Percentage>
-                                        {planterData[key].data[planterData[key].data.length - 1].moisturePercentage}
-                                    </Percentage>
-                                    <DoughnutMoistureGraph planter={key} />
-                                </DoughnutContainer>
-                            </SectionWidthHalf>
-                        </Card>
-                    )
-                }
+            {Object.keys(planterNodes).map((key) => {
+                return (
+                    <Card small key={key}>
+                        <SectionWidthHalf>
+                            <SubTitle>
+                                {key}
+                                <RiSeedlingFill />
+                            </SubTitle>
+                            <Paragraph>
+                                <Label>Age:</Label>
+                                <Value>76 Days</Value>
+                            </Paragraph>
+                            <Paragraph>
+                                <Label>Days till next watering:</Label>
+                                <Value>14 days</Value>
+                            </Paragraph>
+                            <Paragraph>
+                                <Label>Plants:</Label>
+                                <Value>Flowers, Tomatoes, Beans, Roses, Basil</Value>
+                            </Paragraph>
+                            <CardButtons>
+                                <Link to={`/planter/${key}`} key={key}>
+                                    <SuccessButton>Details</SuccessButton>
+                                </Link>
+                            </CardButtons>
+                        </SectionWidthHalf>
+                        <SectionWidthHalf>
+                            <DoughnutContainer>
+                                <Percentage>
+                                    {planterNodes[key].data[planterNodes[key].data.length - 1].moisturePercentage}
+                                </Percentage>
+                                <DoughnutMoistureGraph planter={key} />
+                            </DoughnutContainer>
+                        </SectionWidthHalf>
+                    </Card>
+                )
             })}
         </Section>
     )

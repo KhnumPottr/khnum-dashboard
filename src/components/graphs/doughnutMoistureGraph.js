@@ -7,7 +7,7 @@ import { useIrrigation } from "../../connections/irrigationWebSocket"
 ChartJS.register(...registerables, Filler)
 
 function DoughnutMoistureGraph({ planter }) {
-    const irrigationData = useIrrigation()
+    const irrigationData = useIrrigation().nodes
 
     const [graphConfig, setGraphConfig] = useState({
         labels: [],
