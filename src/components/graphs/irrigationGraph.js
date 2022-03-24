@@ -62,10 +62,14 @@ function IrrigationGraph({ planter }) {
         },
         scales: {
             y: {
+                color: "blue",
                 min: 0,
                 max: 100,
                 grid: {
                     display: false,
+                },
+                ticks: {
+                    color: "#e9ebf0",
                 },
             },
             x: {
@@ -73,7 +77,7 @@ function IrrigationGraph({ planter }) {
                     display: false,
                 },
                 ticks: {
-                    fontColor: "rgba(4, 214, 144, 0.1)",
+                    color: "#e9ebf0",
                     maxTicksLimit: 7,
                     maxRotation: 0,
                     minRotation: 0,

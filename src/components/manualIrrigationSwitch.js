@@ -1,8 +1,6 @@
 import React from "react"
 import { useIrrigation } from "../connections/irrigationWebSocket"
-import { SuccessButton } from "../styles/input"
-import { Section, Card, CardButtons } from "../styles/layout"
-import { Label, Value } from "../styles/text"
+import { Stack, Panel, FlexboxGrid, Col, Button, Placeholder, Divider } from "rsuite"
 
 function ManualIrrigationSwitch() {
     const irrigationData = useIrrigation()
@@ -16,15 +14,23 @@ function ManualIrrigationSwitch() {
     }
 
     return (
-        <Section>
-            <Card>
-                <Label>Irrigation Status</Label>
-                {irrigation ? <Value>On</Value> : <Value>Off</Value>}
-                <CardButtons>
-                    <SuccessButton onClick={(event) => onClick(event)}>Toggle</SuccessButton>
-                </CardButtons>
-            </Card>
-        </Section>
+        <FlexboxGrid justify="center" style={{ padding: "1rem" }}>
+            <FlexboxGrid.Item as={Col} sx={24}>
+                <Stack divider={<Divider vertical />}>
+                    <FlexboxGrid>
+                        <FlexboxGrid.Item as={Col} sx={12}>
+                            <strong>Irrigation Status</strong>
+                        </FlexboxGrid.Item>
+                        <FlexboxGrid.Item as={Col} sx={12}>
+                            {irrigation ? <span>On</span> : <span>Off</span>}
+                        </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                    <Button appearance="primary" color="blue" onClick={(event) => onClick(event)}>
+                        Toggle
+                    </Button>
+                </Stack>
+            </FlexboxGrid.Item>
+        </FlexboxGrid>
     )
 }
 

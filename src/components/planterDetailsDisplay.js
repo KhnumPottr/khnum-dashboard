@@ -1,14 +1,14 @@
 import React, { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import PropTypes from "prop-types"
 import IrrigationGraph from "./graphs/irrigationGraph"
-import { Card } from "../styles/layout"
 import { LineContainer } from "../styles/graphDisplays"
 import { useIrrigation } from "../connections/irrigationWebSocket"
 
-function PlanterDetailsDisplay() {
-    const plantId = useParams().id
+import { Stack, Panel, FlexboxGrid, Col, Button, Placeholder } from "rsuite"
+
+function PlanterDetailsDisplay({ plantId }) {
     const irrigationData = useIrrigation()
-    const planter = irrigationData[plantId]
+    const planter = irrigationData.nodes[plantId]
     const sendMessage = irrigationData.send
 
     useEffect(() => {
@@ -18,14 +18,16 @@ function PlanterDetailsDisplay() {
     }, [planter, plantId, sendMessage])
 
     return (
-        <>
-            <Card large>
-                <LineContainer>
-                    <IrrigationGraph planter={plantId} />
-                </LineContainer>
-            </Card>
-        </>
+        <Panel style={{ paddingTop: "1rem" }}>
+            <LineContainer>
+                <IrrigationGraph planter={plantId} />
+            </LineContainer>
+        </Panel>
     )
+}
+
+PlanterDetailsDisplay.propTypes = {
+    plantId: PropTypes.string,
 }
 
 export default PlanterDetailsDisplay

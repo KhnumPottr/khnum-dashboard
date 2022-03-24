@@ -1,15 +1,20 @@
 import React from "react"
 import ManualIrrigationSwitch from "../components/manualIrrigationSwitch"
 import PlanterSummaryDisplay from "../components/planterSummaryDisplay"
-import { Container } from "../styles/layout"
-import { Title } from "../styles/text"
+import { Container, Header, Content } from "rsuite"
+import IrrigationWebSocket from "../connections/irrigationWebSocket"
 
 function Dashboard() {
     return (
         <Container>
-            <Title>Eden Report</Title>
-            <ManualIrrigationSwitch />
-            <PlanterSummaryDisplay />
+            <IrrigationWebSocket>
+                <Header>
+                    <ManualIrrigationSwitch />
+                </Header>
+                <Content>
+                    <PlanterSummaryDisplay />
+                </Content>
+            </IrrigationWebSocket>
         </Container>
     )
 }
