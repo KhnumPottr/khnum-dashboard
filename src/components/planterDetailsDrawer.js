@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import PlanterDetailsDisplay from "./planterDetailsDisplay"
+import PlanterDetailsDisplay from "./planterDetailsPanel"
 import { Drawer } from "rsuite"
 
 function PlanterDetails({ plantId, toggle, setToggle }) {

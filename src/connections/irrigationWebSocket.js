@@ -12,7 +12,7 @@ function IrrigationWebSocket({ children }) {
             case "ARRAY_DATA":
                 if (
                     irrigationData.nodes[data.nodeName] == undefined ||
-                    irrigationData.nodes[data.nodeName].data.length == 1
+                    irrigationData.nodes[data.nodeName].data.length <= 1
                 ) {
                     setIrrigationData((prevState) => {
                         return {
@@ -106,8 +106,6 @@ function IrrigationWebSocket({ children }) {
             return { ...prevState, send: sendMessage }
         })
 
-        // wsCurrent.send
-
         return () => {
             wsCurrent.close()
         }
@@ -126,7 +124,7 @@ function useIrrigation() {
 }
 
 IrrigationWebSocket.propTypes = {
-    children: PropTypes.object,
+    children: PropTypes.array,
 }
 
 export { useIrrigation }

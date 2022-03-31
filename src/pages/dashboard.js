@@ -1,6 +1,6 @@
 import React from "react"
 import ManualIrrigationSwitch from "../components/manualIrrigationSwitch"
-import PlanterSummaryDisplay from "../components/planterSummaryDisplay"
+import PlanterSummaryStack from "../components/PlanterSummaryStack"
 import { Container, Header, Content } from "rsuite"
 import IrrigationWebSocket from "../connections/irrigationWebSocket"
 
@@ -12,7 +12,7 @@ function Dashboard() {
                     <ManualIrrigationSwitch />
                 </Header>
                 <Content>
-                    <PlanterSummaryDisplay />
+                    <PlanterSummaryStack />
                 </Content>
             </IrrigationWebSocket>
         </Container>
