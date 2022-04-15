@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { useIrrigation } from "../connections/irrigationWebSocket"
-import PlanterDetails from "./planterDetailsDrawer"
+import PlanterDetails from "./planterDetails/planterDetailsDrawer"
 import { Stack, Panel, FlexboxGrid, Col, Button, Placeholder } from "rsuite"
-import PlanterSummaryCard from "./planterSummaryCard"
-import PlanterSummaryPlaceholder from "./planterSummaryPlaceholder"
+import PlanterSummaryCard from "./planterSummary/planterSummaryCard"
+import PlanterSummaryPlaceholder from "./planterSummary/planterSummaryPlaceholder"
 
 function PlanterSummaryStack() {
     const planterNodes = useIrrigation().nodes

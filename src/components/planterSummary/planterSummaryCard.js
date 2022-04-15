@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { DoughnutContainer, Percentage } from "../styles/graphDisplays"
-import DoughnutMoistureGraph from "./graphs/doughnutMoistureGraph"
+import { DoughnutContainer, Percentage } from "../../styles/graphDisplays"
+import DoughnutMoistureGraph from "../graphs/doughnutMoistureGraph"
 import { Panel, FlexboxGrid, Col, Button } from "rsuite"
 
 function PlanterSummaryCard({ plantId, onClick, percentage }) {
