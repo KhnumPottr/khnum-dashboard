@@ -6,6 +6,7 @@ export const DoughnutContainer = styled.div({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "1rem",
     height: "100%",
     width: "100%",
 })

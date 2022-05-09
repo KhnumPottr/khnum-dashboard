@@ -6,8 +6,8 @@ import { useIrrigation } from "../../connections/irrigationWebSocket"
 
 ChartJS.register(...registerables, Filler)
 
-function DoughnutMoistureGraph({ planter }) {
-    const irrigationData = useIrrigation().nodes
+function DoughnutMoistureGraph({ planterId, percentage }) {
+    const { moistureHistory } = useIrrigation()
 
     const [graphConfig, setGraphConfig] = useState({
         labels: [],
@@ -28,8 +28,20 @@ function DoughnutMoistureGraph({ planter }) {
     }
 
     useEffect(() => {
-        const percentage = handleIncomingValue(irrigationData[planter].data)
-        if (irrigationData[planter] != undefined) {
+        if (moistureHistory[planterId] != undefined) {
+            const latestReading = handleIncomingValue(moistureHistory[planterId].pop())
+            setGraphConfig((prevData) => {
+                return {
+                    labels: [],
+                    datasets: [
+                        {
+                            ...prevData.datasets[0],
+                            data: [latestReading.moisturePercentage, 100 - latestReading.moisturePercentage],
+                        },
+                    ],
+                }
+            })
+        } else {
             setGraphConfig((prevData) => {
                 return {
                     labels: [],
@@ -42,7 +54,7 @@ function DoughnutMoistureGraph({ planter }) {
                 }
             })
         }
-    }, [irrigationData, planter])
+    }, [moistureHistory, planterId, percentage])
 
     const options = {
         responsive: true,
@@ -67,7 +79,8 @@ function DoughnutMoistureGraph({ planter }) {
 }
 
 DoughnutMoistureGraph.propTypes = {
-    planter: PropTypes.string,
+    planterId: PropTypes.string,
+    percentage: PropTypes.number,
 }
 
 export default DoughnutMoistureGraph

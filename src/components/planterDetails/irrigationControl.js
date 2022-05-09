@@ -21,7 +21,7 @@ function IrrigationControl({ type, onClick }) {
                         appearance="primary"
                         color="yellow"
                         icon={<MdWaterDrop />}
-                        accessibilityLabel={"trigger irrigation"}
+                        aria-label={"trigger irrigation"}
                         onClick={(e) => triggerIrrigation(e)}
                     />
                 )
@@ -32,7 +32,7 @@ function IrrigationControl({ type, onClick }) {
                     appearance="primary"
                     color="blue"
                     icon={<MdOutlineWaterDrop />}
-                    accessibilityLabel={"trigger irrigation"}
+                    aria-label={"trigger irrigation"}
                     onClick={(e) => triggerIrrigation(e)}
                 />
             )
@@ -43,7 +43,7 @@ function IrrigationControl({ type, onClick }) {
                     appearance="primary"
                     color="green"
                     icon={<MdModeEdit />}
-                    accessibilityLabel={"edit planter"}
+                    aria-label={"edit planter"}
                     onClick={(e) => onClick(e)}
                 />
             )
@@ -54,7 +54,7 @@ function IrrigationControl({ type, onClick }) {
                     appearance="primary"
                     color="violet"
                     icon={<GiNightSleep />}
-                    accessibilityLabel={"sleep and away mode"}
+                    aria-label={"sleep and away mode"}
                 />
             )
         case "remove":
@@ -64,7 +64,7 @@ function IrrigationControl({ type, onClick }) {
                     appearance="primary"
                     color="red"
                     icon={<MdRemoveCircle />}
-                    accessibilityLabel={"remove planter"}
+                    aria-label={"remove planter"}
                 />
             )
     }

@@ -2,73 +2,113 @@ import React, { useState, useEffect, useRef, createContext, useContext } from "r
 import PropTypes from "prop-types"
 
 const IrrigationContext = createContext()
+IrrigationContext.displayName = "IrrigationContext"
 
 function IrrigationWebSocket({ children }) {
-    const [irrigationData, setIrrigationData] = useState({ nodes: {} })
+    const [planterData, setPlanterData] = useState({ planterDetails: {}, moistureHistory: {} })
     const ws = useRef(null)
 
     const dataReducer = (data) => {
         switch (data.messageType) {
-            case "ARRAY_DATA":
+            case "IRRIGATION_ARRAY_DATA":
                 if (
-                    irrigationData.nodes[data.nodeName] == undefined ||
-                    irrigationData.nodes[data.nodeName].data.length <= 1
+                    planterData.moistureHistory[data.id] == undefined ||
+                    planterData.moistureHistory[data.id].length <= 1
                 ) {
-                    setIrrigationData((prevState) => {
+                    setPlanterData((prevState) => {
                         return {
                             ...prevState,
-                            nodes: {
-                                ...prevState.nodes,
-                                [data.nodeName]: { nodeName: data.nodeName, data: formateDateInArray(data.payload) },
+                            moistureHistory: {
+                                ...prevState.moistureHistory,
+                                [data.id]: [...formateDateInArray(data.payload)],
                             },
                         }
                     })
                 }
                 break
-            case "DATA": {
-                let updateData
-                if (irrigationData.nodes[data.nodeName] == undefined) {
-                    updateData = [
-                        {
-                            moisturePercentage: data.payload,
-                            dateReceived: formateDate(data.dateReceived),
-                        },
-                    ]
-                } else {
-                    updateData = [
-                        ...irrigationData.nodes[data.nodeName].data,
-                        {
-                            moisturePercentage: data.payload,
-                            dateReceived: formateDate(data.dateReceived),
-                        },
-                    ]
-                }
-                setIrrigationData((prevState) => {
+            case "PLANTER_DATA": {
+                setPlanterData((prevState) => {
+                    const { irrigating, moistureLevel, upperLimit, lowerLimit, plants, datePlanted } = data.payload
                     return {
                         ...prevState,
-                        nodes: {
-                            ...prevState.nodes,
-                            [data.nodeName]: {
-                                ...prevState[data.nodeName],
-                                data: updateData,
+                        planterDetails: {
+                            ...prevState.planterDetails,
+                            [data.id]: {
+                                planterId: data.id,
+                                title: data.payload.title,
+                                irrigating: irrigating ? irrigating : false,
+                                moisturePercentage: moistureLevel ? moistureLevel : null,
+                                upperLimit: upperLimit ? upperLimit : null,
+                                lowerLimit: lowerLimit ? lowerLimit : null,
+                                plants: plants ? plants : null,
+                                datePlanted: datePlanted ? datePlanted : null,
                             },
                         },
                     }
                 })
                 break
             }
-            case "SWITCH":
-                setIrrigationData((prevState) => {
-                    return {
-                        ...prevState,
-                        irrigationState: data.payload,
-                    }
-                })
-                break
             default:
                 throw { name: "NotImplementedError", message: "too lazy to implement" }
         }
     }
+
+    // const dataReducer = (data) => {
+    //     console.log(data)
+    //     switch (data.messageType) {
+    //         case "IRRIGATION_ARRAY_DATA":
+    //             if (irrigationData.nodes[data.id] == undefined || irrigationData.nodes[data.id].data.length <= 1) {
+    //                 setIrrigationData((prevState) => {
+    //                     return {
+    //                         ...prevState,
+    //                         nodes: {
+    //                             ...prevState.nodes,
+    //                             [data.id]: { id: data.id, data: formateDateInArray(data.payload) },
+    //                         },
+    //                     }
+    //                 })
+    //             }
+    //             break
+    //         case "PLANTER_DATA": {
+    //             let updateData
+    //             if (irrigationData.nodes[data.planterId] == undefined) {
+    //                 updateData = [
+    //                     {
+    // title: data.payload.title,
+    // irrigating: data.payload.irrigating,
+    // moisturePercentage: data.payload.moistureLevel,
+    // dateReceived: formateDate(data.dateReceived),
+    //                     },
+    //                 ]
+    //             } else {
+    //                 updateData = [
+    //                     ...irrigationData.nodes[data.id].data,
+    //                     {
+    //                         title: data.payload.title,
+    //                         irrigating: data.payload.irrigating,
+    //                         moisturePercentage: data.payload.moistureLevel,
+    //                         dateReceived: formateDate(data.dateReceived),
+    //                     },
+    //                 ]
+    //             }
+    //             setIrrigationData((prevState) => {
+    //                 return {
+    //                     ...prevState,
+    //                     nodes: {
+    //                         ...prevState.nodes,
+    //                         [data.id]: {
+    //                             ...prevState[data.id],
+    //                             data: updateData,
+    //                         },
+    //                     },
+    //                 }
+    //             })
+    //             break
+    //         }
+    //         default:
+    //             throw { name: "NotImplementedError", message: "too lazy to implement" }
+    //     }
+    // }
 
     const formateDate = (date) => {
         return new Date(
@@ -83,7 +123,8 @@ function IrrigationWebSocket({ children }) {
 
     const formateDateInArray = (payload) => {
         return payload.map((data) => {
-            return { moisturePercentage: data.moisturePercentage, dateReceived: formateDate(data.dateReceived) }
+            const { moistureLevel, dateReceived } = data
+            return { moisturePercentage: moistureLevel, dateReceived: formateDate(dateReceived) }
         })
     }
 
@@ -102,7 +143,7 @@ function IrrigationWebSocket({ children }) {
             dataReducer(message)
         }
 
-        setIrrigationData((prevState) => {
+        setPlanterData((prevState) => {
             return { ...prevState, send: sendMessage }
         })
 
@@ -112,7 +153,7 @@ function IrrigationWebSocket({ children }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    return <IrrigationContext.Provider value={irrigationData}>{children}</IrrigationContext.Provider>
+    return <IrrigationContext.Provider value={planterData}>{children}</IrrigationContext.Provider>
 }
 
 function useIrrigation() {

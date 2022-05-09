@@ -2,36 +2,30 @@ import React from "react"
 import PropTypes from "prop-types"
 import { DoughnutContainer, Percentage } from "../../styles/graphDisplays"
 import DoughnutMoistureGraph from "../graphs/doughnutMoistureGraph"
-import { Panel, FlexboxGrid, Col, Button } from "rsuite"
+import { Panel, FlexboxGrid, Col, Button, Tag } from "rsuite"
 
-function PlanterSummaryCard({ plantId, onClick, percentage }) {
+function PlanterSummaryCard({ planter, onClick }) {
+    const { planterId, title, irrigating, moisturePercentage } = planter
+    const planterTitle = title ? title : planterId
+    const isIrrigating = irrigating ? <Tag color="green">In Progess</Tag> : <Tag>Not Irrigating</Tag>
     return (
-        <Panel shaded bodyFill header={plantId} style={{ display: "inline-block", maxWidth: "20rem", padding: "1rem" }}>
+        <Panel shaded bodyFill style={{ display: "inline-block", maxWidth: "20rem", padding: "1rem" }}>
             <FlexboxGrid>
-                <FlexboxGrid.Item as={Col} xs={12}>
-                    <strong>Age:</strong>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item as={Col} xs={12}>
-                    <span>76 Days</span>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item as={Col} xs={12}>
-                    <strong>Days till next watering:</strong>
-                </FlexboxGrid.Item>
-                <FlexboxGrid.Item as={Col} xs={12}>
-                    <span>14 days</span>
+                <FlexboxGrid.Item as={Col} xs={24}>
+                    <h3>{planterTitle}</h3>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item as={Col} sx={12}>
-                    <strong>Plants:</strong>
+                    <strong>Irrigation:</strong>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item as={Col} sx={12}>
-                    <span>Flowers, Tomatoes, Beans</span>
+                    {isIrrigating}
                 </FlexboxGrid.Item>
                 <DoughnutContainer>
-                    <Percentage>{percentage}</Percentage>
-                    <DoughnutMoistureGraph planter={plantId} />
+                    <Percentage>{moisturePercentage}</Percentage>
+                    <DoughnutMoistureGraph planter={planterId} percentage={moisturePercentage} />
                 </DoughnutContainer>
                 <FlexboxGrid.Item as={Col} md={24}>
-                    <Button appearance="primary" color="green" onClick={(e) => onClick(e, plantId)}>
+                    <Button appearance="primary" color="green" onClick={(e) => onClick(e, planterId)}>
                         Details
                     </Button>
                 </FlexboxGrid.Item>
@@ -42,8 +36,8 @@ function PlanterSummaryCard({ plantId, onClick, percentage }) {
 
 PlanterSummaryCard.propTypes = {
     plantId: PropTypes.string,
+    planter: PropTypes.object,
     onClick: PropTypes.func,
-    percentage: PropTypes.number,
 }
 
 export default PlanterSummaryCard

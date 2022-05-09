@@ -9,9 +9,8 @@ import PlanterEditableInformation from "./planterEditableInformation"
 import PlanterInformation from "./planterInformation"
 
 function PlanterDetailsPanel({ plantId }) {
-    const irrigationData = useIrrigation()
-    const planter = irrigationData.nodes[plantId]
-    const sendMessage = irrigationData.send
+    const { planterDetails, send } = useIrrigation()
+    const planter = planterDetails[plantId]
 
     const [editing, setEditing] = useState(false)
 
@@ -21,10 +20,11 @@ function PlanterDetailsPanel({ plantId }) {
     }
 
     useEffect(() => {
-        if (planter != undefined && planter.data.length == 1) {
-            sendMessage(JSON.stringify({ nodeName: plantId, messageType: "IRRIGATION_ARRAY_DATA", payload: null }))
+        //&& moistureHistory[plantId].length == 1
+        if (planter != undefined) {
+            send(JSON.stringify({ id: plantId, messageType: "IRRIGATION_ARRAY_DATA", payload: null }))
         }
-    }, [planter, plantId, sendMessage])
+    }, [planter, plantId, send])
 
     return (
         <Panel style={{ paddingTop: "1rem" }}>
@@ -33,7 +33,7 @@ function PlanterDetailsPanel({ plantId }) {
                     {editing ? <Input size="lg" defaultValue={plantId} /> : <h3>{plantId}</h3>}
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item as={Col} xs={12}>
-                    <h3>{planter.data[planter.data.length - 1].moisturePercentage}%</h3>
+                    <h3>{planter.moisturePercentage}%</h3>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
             <Divider />
@@ -50,7 +50,7 @@ function PlanterDetailsPanel({ plantId }) {
             </FlexboxGrid>
             <Divider />
             <LineContainer>
-                <IrrigationGraph planter={plantId} />
+                <IrrigationGraph planterId={plantId} />
             </LineContainer>
         </Panel>
     )

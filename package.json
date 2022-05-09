@@ -22,6 +22,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
+        "format": "prettier \"**/*.+(js|json|less|css|html|ts|tsx|md)\" --write",
+        "test:coverage": "npm run test -- --watchAll=false",
         "lint": "eslint src/**/*.js",
         "lint-fix": "lint:fix"
     },
@@ -46,6 +48,7 @@
     "devDependencies": {
         "@babel/eslint-parser": "^7.17.0",
         "@babel/preset-react": "^7.16.7",
+        "@faker-js/faker": "^6.3.1",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0"
     }
