@@ -1,15 +1,16 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import "./styles/index.css"
+import "rsuite/dist/rsuite.min.css"
 import reportWebVitals from "./reportWebVitals"
-import Main from "./pages/main"
+import { CustomProvider } from "rsuite"
+import Dashboard from "./pages/dashboard"
 import { BrowserRouter } from "react-router-dom"
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <Main />
-        </BrowserRouter>
+        <CustomProvider theme="dark">
+            <Dashboard />
+        </CustomProvider>
     </React.StrictMode>,
     document.getElementById("root")
 )

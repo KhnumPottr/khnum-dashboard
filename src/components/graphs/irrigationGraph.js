@@ -6,9 +6,8 @@ import { useIrrigation } from "../../connections/irrigationWebSocket"
 
 ChartJS.register(...registerables, Filler)
 
-function IrrigationGraph({ planter }) {
-    const irrigationData = useIrrigation().nodes
-
+function IrrigationGraph({ planterId }) {
+    const { moistureHistory } = useIrrigation()
     const [data, setData] = useState({
         labels: [],
         datasets: [
@@ -35,8 +34,9 @@ function IrrigationGraph({ planter }) {
     }
 
     useEffect(() => {
-        if (irrigationData[planter] != undefined) {
-            const plottingData = irrigationData[planter].data
+        if (moistureHistory[planterId] != undefined) {
+            const plottingData = moistureHistory[planterId]
+            console.log(plottingData)
             setData((prevData) => {
                 return {
                     labels: [...prevData.labels, ...handleIncomingLabels(plottingData)],
@@ -49,7 +49,7 @@ function IrrigationGraph({ planter }) {
                 }
             })
         }
-    }, [irrigationData, planter])
+    }, [moistureHistory, planterId])
 
     const options = {
         responsive: true,
@@ -62,10 +62,14 @@ function IrrigationGraph({ planter }) {
         },
         scales: {
             y: {
+                color: "blue",
                 min: 0,
                 max: 100,
                 grid: {
                     display: false,
+                },
+                ticks: {
+                    color: "#e9ebf0",
                 },
             },
             x: {
@@ -73,7 +77,7 @@ function IrrigationGraph({ planter }) {
                     display: false,
                 },
                 ticks: {
-                    fontColor: "rgba(4, 214, 144, 0.1)",
+                    color: "#e9ebf0",
                     maxTicksLimit: 7,
                     maxRotation: 0,
                     minRotation: 0,
@@ -94,7 +98,7 @@ function IrrigationGraph({ planter }) {
 }
 
 IrrigationGraph.propTypes = {
-    planter: PropTypes.string,
+    planterId: PropTypes.string,
 }
 
 export default IrrigationGraph
