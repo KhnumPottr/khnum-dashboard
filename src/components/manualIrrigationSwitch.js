@@ -1,6 +1,6 @@
 import React from "react"
 import { useIrrigation } from "../connections/irrigationWebSocket"
-import { Stack, Panel, FlexboxGrid, Col, Button, Placeholder, Divider } from "rsuite"
+import { Stack, FlexboxGrid, Col, Button, Divider } from "rsuite"
 
 function ManualIrrigationSwitch() {
     const irrigationData = useIrrigation()

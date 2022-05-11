@@ -7,7 +7,7 @@ import { Panel, FlexboxGrid, Col, Button, Tag } from "rsuite"
 function PlanterSummaryCard({ planter, onClick }) {
     const { planterId, title, irrigating, moisturePercentage } = planter
     const planterTitle = title ? title : planterId
-    const isIrrigating = irrigating ? <Tag color="green">In Progess</Tag> : <Tag>Not Irrigating</Tag>
+    const isIrrigating = irrigating ? <Tag color="green">In Progress</Tag> : <Tag>Not Irrigating</Tag>
     return (
         <Panel shaded bodyFill style={{ display: "inline-block", maxWidth: "20rem", padding: "1rem" }}>
             <FlexboxGrid>

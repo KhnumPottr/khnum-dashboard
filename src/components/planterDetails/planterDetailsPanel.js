@@ -3,37 +3,47 @@ import PropTypes from "prop-types"
 import IrrigationGraph from "../graphs/irrigationGraph"
 import { LineContainer } from "../../styles/graphDisplays"
 import { useIrrigation } from "../../connections/irrigationWebSocket"
-import { Divider, Panel, FlexboxGrid, Col, Stack, Input } from "rsuite"
+import { Divider, Panel, FlexboxGrid, Col, Stack } from "rsuite"
 import IrrigationControl from "./irrigationControl"
 import PlanterEditableInformation from "./planterEditableInformation"
 import PlanterInformation from "./planterInformation"
 
-function PlanterDetailsPanel({ plantId }) {
-    const { planterDetails, send } = useIrrigation()
-    const planter = planterDetails[plantId]
-
+function PlanterDetailsPanel({ planterId }) {
+    const { planterDetails, send, moistureHistory } = useIrrigation()
+    const planter = planterDetails[planterId]
     const [editing, setEditing] = useState(false)
+    const title = planter.title ? planter.title : planterId
 
     const triggerEditing = (e) => {
         e.preventDefault
         setEditing(!editing)
     }
 
-    useEffect(() => {
-        //&& moistureHistory[plantId].length == 1
-        if (planter != undefined) {
-            send(JSON.stringify({ id: plantId, messageType: "IRRIGATION_ARRAY_DATA", payload: null }))
+    const moisturePercentage = () => {
+        if (moistureHistory[planterId] != undefined) {
+            const latestRecord = moistureHistory[planterId].at(-1)
+            return `${latestRecord.moisturePercentage}%`
+        } else if (planter != undefined) {
+            return `${planter.moisturePercentage}%`
         }
-    }, [planter, plantId, send])
+        return "No reading available"
+    }
+
+    useEffect(() => {
+        if (planter != undefined && moistureHistory[planterId] == undefined) {
+            send(JSON.stringify({ id: planterId, messageType: "IRRIGATION_ARRAY_DATA", payload: null }))
+            send(JSON.stringify({ id: planterId, messageType: "PLANTER_DATA", payload: planterId }))
+        }
+    }, [planter, moistureHistory, planterId, send])
 
     return (
         <Panel style={{ paddingTop: "1rem" }}>
             <FlexboxGrid>
                 <FlexboxGrid.Item as={Col} xs={12}>
-                    {editing ? <Input size="lg" defaultValue={plantId} /> : <h3>{plantId}</h3>}
+                    <h3>{title}</h3>
                 </FlexboxGrid.Item>
                 <FlexboxGrid.Item as={Col} xs={12}>
-                    <h3>{planter.moisturePercentage}%</h3>
+                    <h3>{moisturePercentage()}</h3>
                 </FlexboxGrid.Item>
             </FlexboxGrid>
             <Divider />
@@ -45,19 +55,19 @@ function PlanterDetailsPanel({ plantId }) {
             </Stack>
             <Divider />
             <FlexboxGrid>
-                <PlanterEditableInformation editing={editing} />
-                <PlanterInformation />
+                <PlanterEditableInformation planterId={planterId} editing={editing} onClose={triggerEditing} />
+                <PlanterInformation planter={planter} />
             </FlexboxGrid>
             <Divider />
             <LineContainer>
-                <IrrigationGraph planterId={plantId} />
+                <IrrigationGraph planterId={planterId} />
             </LineContainer>
         </Panel>
     )
 }
 
 PlanterDetailsPanel.propTypes = {
-    plantId: PropTypes.string,
+    planterId: PropTypes.string,
 }
 
 export default PlanterDetailsPanel

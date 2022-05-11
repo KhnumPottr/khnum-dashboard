@@ -36,7 +36,6 @@ function IrrigationGraph({ planterId }) {
     useEffect(() => {
         if (moistureHistory[planterId] != undefined) {
             const plottingData = moistureHistory[planterId]
-            console.log(plottingData)
             setData((prevData) => {
                 return {
                     labels: [...prevData.labels, ...handleIncomingLabels(plottingData)],
